@@ -1,0 +1,1 @@
+# instalar a biblioteca do pygame
