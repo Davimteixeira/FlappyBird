@@ -180,7 +180,7 @@ def main():
     rodando = True
     while rodando:
         relogio.tick(30)
-        
+        #interação com o usuario 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 rodando =False
@@ -190,8 +190,36 @@ def main():
                 if evento.key == pygame.K_SPACE:
                     for passaro in passaros:
                         passaro.pular()
+        # mover as coisas
+        for passaro in passaros:
+            passaro.mover()
+        chao.mover()
         
+        adicionar_cano = False
+        remover_cano = []
         
+        for cano in canos:
+            for i, passaro in enumerate(passaros):
+                if cano.colidir(passaro):
+                    passaros.pop(i)
+                if not cano.passou and passaro.x > cano.x:
+                    cano.passou = True
+                    adicionar_cano = True
+            
+            cano.mover()
+            if cano.x + cano.CANO_TOPO.get_width() < 0:
+                remover_canos.append(cano)
+                
+        if adicionar_cano:
+            ponto += 1
+            canos.append(Cano(600))
+        for cano in remover_cano:
+            canos.remove(cano)
+        
+        for i, passaro in enumerate(passaros):
+            if (passaro.y + passaro.imagem.get_height()) > chao.y:
+                passaros.pop(i)
+            
         
         
         desenhar_tela(tela, passaros,canos, chao, pontos)
